@@ -50,9 +50,9 @@ export enum RegisterNames {
     VD = 'VD',
     VE = 'VE',
     VF = 'VF',
-    PC = 'PC',
-    SP = 'SP',
     ST = 'ST',
     DT = 'DT',
+    PC = 'PC',
+    SP = 'SP',
     I = 'I'
 }
