@@ -1,0 +1,1 @@
+export const create_memory = (memory_size: number): Uint8Array => new Uint8Array(memory_size);
