@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register",
     "build": "webpack",
+    "build:watch": "webpack --watch",
     "test": "mocha --check-leaks -r ts-node/register -r tsconfig-paths/register \"src/test/**/*.spec.ts\""
   },
   "keywords": [
