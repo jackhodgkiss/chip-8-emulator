@@ -23,4 +23,16 @@ export class Processor {
     public get registers(): { [name: string]: Register } {
         return this._registers;
     }
+
+    public get state(): string {
+        let result: string = `Chip-8 Processor\nSystem Memory: ${this._system_memory.length} Bytes\nRegisters:\n`;
+        const registers = Object.keys(this._registers);
+        registers.forEach(register_name => {
+            result += `${this._registers[register_name].state}\n`;
+        });
+        return result;
+    }
 }
+
+const processor = new Processor(4096);
+console.log(processor.state);
