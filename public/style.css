@@ -33,8 +33,11 @@ body {
     grid-template-rows: repeat(12, 32px);
     gap: 1px;
     padding: 1px;
+    border-radius: 4px;
+    box-shadow: 10px 10px 15px -5px rgba(0,0,0,0.81);
 }
 
 .pixel {
     background-color: white;
+    border-radius: 2px;
 }
