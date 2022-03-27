@@ -1,0 +1,38 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #333;
+}
+
+#container {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#title {
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 100;
+}
+
+#emulator-screen {
+    width: 768px;
+    height: 384px;
+    background-color: black;
+    border: 1px solid white;
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: repeat(24, 32px);
+    grid-template-rows: repeat(12, 32px);
+}
+
+.pixel {
+    background-color: white;
+}
