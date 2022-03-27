@@ -38,6 +38,13 @@ body {
 }
 
 .pixel {
-    background-color: white;
     border-radius: 2px;
+}
+
+.pixel.low {
+    background-color: black;
+}
+
+.pixel.high {
+    background-color: white;
 }
