@@ -24,8 +24,12 @@ export class Register {
         this._value = value & (this._is_sixteen_bit ? 0xFFFF : 0xFFF);
     }
 
+    public get is_sixteen_bit(): boolean {
+        return this._is_sixteen_bit;
+    }
+
     public get state(): string {
-        return `${this._name}: ${this._value}`
+        return `${this._name}: ${this._value}, Size: ${this._is_sixteen_bit ? 16 : 14} bits`
     }
 }
 
