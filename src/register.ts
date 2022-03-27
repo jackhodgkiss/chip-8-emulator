@@ -1,9 +1,15 @@
 export class Register {
     private _name: RegisterNames;
-    private _value: number;
+    private _value!: number;
+    private _is_sixteen_bit: boolean;
     constructor(name: RegisterNames, value: number) {
         this._name = name;
-        this._value = value;
+        this._is_sixteen_bit = [
+            RegisterNames.PC, 
+            RegisterNames.SP, 
+            RegisterNames.I
+        ].includes(name);
+        this.value = value;
     }
 
     public get name(): RegisterNames {
@@ -15,7 +21,7 @@ export class Register {
     }
 
     public set value(value: number) {
-        this._value = value;
+        this._value = value & (this._is_sixteen_bit ? 0xFFFF : 0xFFF);
     }
 
     public get state(): string {

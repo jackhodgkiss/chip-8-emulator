@@ -33,6 +33,3 @@ export class Processor {
         return result;
     }
 }
-
-const processor = new Processor(4096);
-console.log(processor.state);
