@@ -4,7 +4,8 @@
   "description": "A Chip-8 emulator written in TypeScript",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node -r tsconfig-paths/register",
+    "test": "mocha --check-leaks -r ts-node/register -r tsconfig-paths/register \"src/test/**/*.spec.ts\""
   },
   "keywords": [
     "Chip-8",
