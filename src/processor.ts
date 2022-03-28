@@ -98,14 +98,23 @@ export class Processor {
                 break;
             }
             case Instructions.SKPIM: {
+                const VX = this._registers[`V${masked.second_nibble >> 8}`].value;
+                const KK = masked.second_byte;
+                if(VX == KK) { this._registers[RegisterNames.PC].value += 0x2 };
                 break;
             }
             case Instructions.SKPNIM: {
+                const VX = this._registers[`V${masked.second_nibble >> 8}`].value;
+                const KK = masked.second_byte;
+                if(VX != KK) { this._registers[RegisterNames.PC].value += 0x2 };
                 break;
             }
             case 0x5000: {
                 switch(masked.first_last) {
                     case Instructions.SKPEQ: {
+                        const VX = this._registers[`V${masked.second_nibble >> 8}`].value;
+                        const VY = this._registers[`V${masked.third_nibble >> 4}`].value;
+                        if(VX == VY) { this._registers[RegisterNames.PC].value += 0x2 };
                         break;
                     }
                     default: {
@@ -158,6 +167,9 @@ export class Processor {
                 break;
             }
             case Instructions.SKPNEQ: {
+                const VX = this._registers[`V${masked.second_nibble >> 8}`].value;
+                const VY = this._registers[`V${masked.third_nibble >> 4}`].value;
+                if(VX != VY) { this._registers[RegisterNames.PC].value += 0x2 };
                 break;
             }
             case Instructions.SIP: {

@@ -132,4 +132,34 @@ describe("Instructions", () => {
         processor.decode_instruction(processor.fetch_instruction());
         expect(processor.registers[RegisterNames.PC].value).is.equal(0x202);
     });
+    it(`SKPIM: 0x${Instructions.SKPIM.toString(16)}, skip the next instruction if the specified register is equal to immediate value`, () => {
+        let processor = new Processor(4096);
+        processor.load_program([0x3103]);
+        processor.registers[RegisterNames.V1].value = 3;
+        processor.decode_instruction(processor.fetch_instruction());
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x204);
+    });
+    it(`SKPNIM: 0x${Instructions.SKPNIM.toString(16)}, skip the next instruction if the specified register is not equal to immediate value`, () => {
+        let processor = new Processor(4096);
+        processor.load_program([0x4004]);
+        processor.registers[RegisterNames.V0].value = 3;
+        processor.decode_instruction(processor.fetch_instruction());
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x204);
+    });
+    it(`SKPEQ: 0x${Instructions.SKPEQ.toString(16)}, skip the next instruction if the specified register is equal to the other register`, () => {
+        let processor = new Processor(4096);
+        processor.load_program([0x5010]);
+        processor.registers[RegisterNames.V0].value = 3;
+        processor.registers[RegisterNames.V1].value = 3;
+        processor.decode_instruction(processor.fetch_instruction());
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x204);
+    });
+    it(`SKPNEQ: 0x${Instructions.SKPNEQ.toString(16)}, skip the next instruction if the specified register is not equal to the other register`, () => {
+        let processor = new Processor(4096);
+        processor.load_program([0x9010]);
+        processor.registers[RegisterNames.V0].value = 2;
+        processor.registers[RegisterNames.V1].value = 3;
+        processor.decode_instruction(processor.fetch_instruction());
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x204);
+    });
 });
