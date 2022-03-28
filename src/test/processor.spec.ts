@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Processor } from "processor";
+import { mask, Processor } from "processor";
 import { Register, RegisterNames } from "register";
 
 describe("Processor", () => {
@@ -45,5 +45,16 @@ describe("Processor", () => {
         expect(processor.registers[RegisterNames.PC].value).is.equal(0x0202);
         processor.fetch_instruction();
         expect(processor.registers[RegisterNames.PC].value).is.equal(0x0204);
+    });
+    it("Processor correctly masks an instruction into its various components", () => {
+        const processor = new Processor(4096);
+        const masked: mask = processor.mask_instruction(0xFED4);
+        expect(masked.first_nibble).is.equal(0xF000);
+        expect(masked.second_nibble).is.equal(0xE00);
+        expect(masked.third_nibble).is.equal(0x00D0);
+        expect(masked.fourth_nibble).is.equal(0x0004);
+        expect(masked.first_byte).is.equal(0xFE00);
+        expect(masked.second_byte).is.equal(0x00D4);
+        expect(masked.twelve_bits).is.equal(0x0ED4);
     });
 })

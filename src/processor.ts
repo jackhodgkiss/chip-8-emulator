@@ -2,6 +2,13 @@ import { Instructions } from "instruction";
 import { create_memory } from "memory";
 import { Register, RegisterNames } from "register";
 
+export type mask = { 
+    first_nibble: number, second_nibble: number, 
+    third_nibble: number, fourth_nibble: number, 
+    first_byte: number, second_byte: number, 
+    twelve_bits: number 
+};
+
 export class Processor {
     private _system_memory: Uint8Array;
     private _registers!: { [name: string]: Register };
@@ -35,11 +42,25 @@ export class Processor {
         return high_bits << 8 | low_bits;
     }
 
+    public mask_instruction(instruction: number): mask {
+        const masked = {
+            first_nibble: instruction & 0xF000,
+            second_nibble: instruction & 0x0F00,
+            third_nibble: instruction & 0x00F0,
+            fourth_nibble: instruction & 0x000F,
+            first_byte: instruction & 0xFF00,
+            second_byte: instruction & 0x00FF,
+            twelve_bits: instruction & 0x0FFF
+        }
+        return masked
+    }
+
     public decode_instruction(instruction: number): {error?: string} {
         let success: boolean = true;
-        switch(instruction & 0xF000) {
+        const masked: mask = this.mask_instruction(instruction);
+        switch(masked.first_nibble) {
             case 0x0000: {
-                switch(instruction & 0x00FF) {
+                switch(masked.second_byte) {
                     case Instructions.NOP: {
                         break;
                     }
