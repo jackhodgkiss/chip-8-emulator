@@ -16,6 +16,16 @@ export class Processor {
         }, { } as { [name: string]: Register });
     }
 
+    public load_program(program: number []): void {
+        this._registers[RegisterNames.PC].value = 0x0200;
+        program.forEach((value, index, _) => {
+            const high_bits: number = value >> 8;
+            const low_bits: number = value & 0xFF;
+            this._system_memory[0x200 + (index * 2)] = high_bits;
+            this._system_memory[0x201 + (index * 2)] = low_bits; 
+        });
+    }
+
     public get system_memory(): Uint8Array {
         return this._system_memory;
     }
