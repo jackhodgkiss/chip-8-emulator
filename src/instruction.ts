@@ -1,4 +1,4 @@
-enum Instructions {
+export enum Instructions {
     NOP = 0x0000,
     CLS = 0x00E0,
     RET = 0x00EE,
