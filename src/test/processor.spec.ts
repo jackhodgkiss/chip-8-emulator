@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { Processor } from "processor";
-import { Register } from "register";
+import { Register, RegisterNames } from "register";
 
 describe("Processor", () => {
     it("Processor has 4KB of available system memory", () => {
@@ -18,9 +18,9 @@ describe("Processor", () => {
     });
     it("Processor sets PC to 0x200 after loading program to memory", () => {
         const processor = new Processor(4096);
-        expect(processor.registers['PC'].value).is.equal(0x0);
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x0);
         processor.load_program([0x00E0, 0xF000]);
-        expect(processor.registers['PC'].value).is.equal(0x0200);
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x0200);
     });
     it("Processor loads program into system memory starting at 0x0200", () => {
         const processor = new Processor(4096);
@@ -30,5 +30,20 @@ describe("Processor", () => {
         expect(system_memory[0x0200 + 0x1]).is.equal(0xE0);
         expect(system_memory[0x0200 + 0x2]).is.equal(0xF0);
         expect(system_memory[0x0200 + 0x3]).is.equal(0x0);
+    });
+    it("Processor can fetch instruction from memory", () => {
+        const processor = new Processor(4096);
+        processor.load_program([0x00E0, 0xF000]);
+        expect(processor.fetch_instruction()).is.equal(0x00E0);
+        expect(processor.fetch_instruction()).is.equal(0xF000);
+    });
+    it("Processor increments PC by two, after fetching instruction", () => {
+        const processor = new Processor(4096);
+        processor.load_program([0x00E0, 0xF000]);
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x0200);
+        processor.fetch_instruction();
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x0202);
+        processor.fetch_instruction();
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x0204);
     });
 })

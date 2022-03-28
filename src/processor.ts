@@ -26,6 +26,14 @@ export class Processor {
         });
     }
 
+    public fetch_instruction(): number {
+        let program_counter: number = this._registers[RegisterNames.PC].value;
+        const high_bits: number = this._system_memory[program_counter++];
+        const low_bits: number = this._system_memory[program_counter++];
+        this._registers[RegisterNames.PC].value = program_counter;
+        return high_bits << 8 | low_bits;
+    }
+
     public get system_memory(): Uint8Array {
         return this._system_memory;
     }
