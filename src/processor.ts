@@ -1,3 +1,4 @@
+import { Instructions } from "instruction";
 import { create_memory } from "memory";
 import { Register, RegisterNames } from "register";
 
@@ -32,6 +33,35 @@ export class Processor {
         const low_bits: number = this._system_memory[program_counter++];
         this._registers[RegisterNames.PC].value = program_counter;
         return high_bits << 8 | low_bits;
+    }
+
+    public decode_instruction(instruction: number): {error?: string} {
+        let success: boolean = true;
+        switch(instruction & 0xF000) {
+            case 0x0000: {
+                switch(instruction & 0x00FF) {
+                    case Instructions.NOP: {
+                        break;
+                    }
+                    case Instructions.CLS: {
+                        break;
+                    }
+                    case Instructions.RET: {
+                        break;
+                    }
+                    default: {
+                        success = false;
+                        break;
+                    }
+                }
+                break;
+            }
+            default: {
+                success = false;
+                break;
+            }
+        }
+        return success ? {error: undefined} : {error: `${instruction} could not be decoded`}
     }
 
     public get system_memory(): Uint8Array {
