@@ -107,3 +107,29 @@ describe("Processor", () => {
         expect(processor.decode_instruction(Instructions.SBAUD).error).is.equal(undefined);
     });
 })
+
+describe("Instructions", () => {
+    it(`GOTO: 0x${Instructions.GOTO.toString(16)}, moves the PC to the desired location`, () => {
+        let processor = new Processor(4096);
+        processor.load_program([0x1016]);
+        processor.decode_instruction(processor.fetch_instruction());
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x16);
+    });
+    it(`CALL: 0x${Instructions.CALL.toString(16)}, saves the PC to stack before moving it to the desired location`, () => {
+        let processor = new Processor(4096);
+        processor.load_program([0x2204, 0x0000, 0x00EE]);
+        processor.decode_instruction(processor.fetch_instruction());
+        expect(processor.system_memory[0x0]).is.equal(0x2);
+        expect(processor.system_memory[0x1]).is.equal(0x2);
+        expect(processor.registers[RegisterNames.SP].value).is.equal(0x2);
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x204);
+    });
+    it(`RET: 0x${Instructions.RET.toString(16)}, restores the PC from the stack`, () => {
+        let processor = new Processor(4096);
+        processor.load_program([0x2204, 0x0000, 0x00EE]);
+        processor.decode_instruction(processor.fetch_instruction());
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x204);
+        processor.decode_instruction(processor.fetch_instruction());
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x202);
+    });
+});

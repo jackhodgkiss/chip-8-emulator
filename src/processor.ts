@@ -71,6 +71,9 @@ export class Processor {
                         break;
                     }
                     case Instructions.RET: {
+                        const low_bits: number = this._system_memory[--this._registers[RegisterNames.SP].value];
+                        const high_bits: number = this._system_memory[--this._registers[RegisterNames.SP].value];
+                        this._registers[RegisterNames.PC].value = high_bits << 8 | low_bits;
                         break;
                     }
                     default: {
@@ -81,9 +84,17 @@ export class Processor {
                 break;
             }
             case Instructions.GOTO: {
+                const jump_location: number = masked.twelve_bits;
+                this._registers[RegisterNames.PC].value = jump_location;
                 break;
             }
             case Instructions.CALL: {
+                const jump_location: number = masked.twelve_bits;
+                const high_bits: number = this._registers[RegisterNames.PC].value >> 8;
+                const low_bits: number = this._registers[RegisterNames.PC].value & 0xFF;
+                this._system_memory[this._registers[RegisterNames.SP].value++] = high_bits;
+                this._system_memory[this._registers[RegisterNames.SP].value++] = low_bits;
+                this._registers[RegisterNames.PC].value = jump_location;
                 break;
             }
             case Instructions.SKPIM: {
