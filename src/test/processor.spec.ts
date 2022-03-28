@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import { Instructions } from "instruction";
 import { mask, Processor } from "processor";
 import { Register, RegisterNames } from "register";
 
@@ -56,5 +57,53 @@ describe("Processor", () => {
         expect(masked.first_byte).is.equal(0xFE00);
         expect(masked.second_byte).is.equal(0x00D4);
         expect(masked.twelve_bits).is.equal(0x0ED4);
+    });
+    it("Processor returns error when attempting to decode invalid instructions", () => {
+        const processor = new Processor(4096);
+        expect(processor.decode_instruction(0x8009).error).is.not.equal(undefined);
+    });
+    it("Processor returns no error when attempting to decode valid instructions", () => {
+        const processor = new Processor(4096);
+        expect(processor.decode_instruction(Instructions.NOP).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.CLS).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.RET).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.GOTO).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.CALL).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SKPIM).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SKPNIM).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SKPEQ).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.ASHEX).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.ADD).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.COPY).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.OR).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.ADD).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.XOR).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.ADDF).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SUBY).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SHR).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SUBX).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SHL).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SKPNEQ).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SIP).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.GOTOV).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.RBAND).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SHOW).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SKPKEQ).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SKPKNEQ).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.STOP).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.TIME).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.INHEX).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.STIME).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SPITCH).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.STONE).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.ADDMP).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.DSPDIG).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.DSPCHR).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.DEQ).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.STORE).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.LOAD).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SEND).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.RECV).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.SBAUD).error).is.equal(undefined);
     });
 })
