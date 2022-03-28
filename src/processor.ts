@@ -6,7 +6,8 @@ export type mask = {
     first_nibble: number, second_nibble: number, 
     third_nibble: number, fourth_nibble: number, 
     first_byte: number, second_byte: number, 
-    twelve_bits: number 
+    twelve_bits: number, first_last: number,
+    first_third_last: number
 };
 
 export class Processor {
@@ -50,7 +51,9 @@ export class Processor {
             fourth_nibble: instruction & 0x000F,
             first_byte: instruction & 0xFF00,
             second_byte: instruction & 0x00FF,
-            twelve_bits: instruction & 0x0FFF
+            twelve_bits: instruction & 0x0FFF,
+            first_last: instruction & 0xF00F,
+            first_third_last: instruction & 0xF0FF
         }
         return masked
     }
@@ -68,6 +71,156 @@ export class Processor {
                         break;
                     }
                     case Instructions.RET: {
+                        break;
+                    }
+                    default: {
+                        success = false;
+                        break;
+                    }
+                }
+                break;
+            }
+            case Instructions.GOTO: {
+                break;
+            }
+            case Instructions.CALL: {
+                break;
+            }
+            case Instructions.SKPIM: {
+                break;
+            }
+            case Instructions.SKPNIM: {
+                break;
+            }
+            case 0x5000: {
+                switch(masked.first_last) {
+                    case Instructions.SKPEQ: {
+                        break;
+                    }
+                    default: {
+                        success = false;
+                        break;
+                    }
+                }
+                break;
+            }
+            case Instructions.ASHEX: {
+                break;
+            }
+            case Instructions.ADD: {
+                break;
+            }
+            case 0x8000: {
+                switch(masked.first_last) {
+                    case Instructions.COPY: {
+                        break;
+                    }
+                    case Instructions.OR: {
+                        break;
+                    }
+                    case Instructions.AND: {
+                        break;
+                    }
+                    case Instructions.XOR: {
+                        break;
+                    }
+                    case Instructions.ADDF: {
+                        break;
+                    }
+                    case Instructions.SUBY: {
+                        break;
+                    }
+                    case Instructions.SHR: {
+                        break;
+                    }
+                    case Instructions.SUBX: {
+                        break;
+                    }
+                    case Instructions.SHL: {
+                        break;
+                    }
+                    default: {
+                        success = false;
+                        break;
+                    }
+                }
+                break;
+            }
+            case Instructions.SKPNEQ: {
+                break;
+            }
+            case Instructions.SIP: {
+                break;
+            }
+            case Instructions.GOTOV: {
+                break;
+            }
+            case Instructions.RBAND: {
+                break;
+            }
+            case Instructions.SHOW: {
+                break;
+            }
+            case 0xE000: {
+                switch(masked.first_third_last) {
+                    case Instructions.SKPKEQ: {
+                        break;
+                    }
+                    case Instructions.SKPKNEQ: {
+                        break;
+                    }
+                    default: {
+                        success = false;
+                        break;
+                    }
+                }
+                break;
+            }
+            case 0xF000: {
+                switch(masked.first_third_last) {
+                    case Instructions.STOP: {
+                        break;
+                    }
+                    case Instructions.TIME: {
+                        break;
+                    }
+                    case Instructions.INHEX: {
+                        break;
+                    }
+                    case Instructions.STIME: {
+                        break;
+                    }
+                    case Instructions.SPITCH: {
+                        break;
+                    }
+                    case Instructions.STONE: {
+                        break;
+                    }
+                    case Instructions.ADDMP: {
+                        break;
+                    }
+                    case Instructions.DSPDIG: {
+                        break;
+                    }
+                    case Instructions.DSPCHR: {
+                        break;
+                    }
+                    case Instructions.DEQ: {
+                        break;
+                    }
+                    case Instructions.STORE: {
+                        break;
+                    }
+                    case Instructions.LOAD: {
+                        break;
+                    }
+                    case Instructions.SEND: {
+                        break;
+                    }
+                    case Instructions.RECV: {
+                        break;
+                    }
+                    case Instructions.SBAUD: {
                         break;
                     }
                     default: {
@@ -102,3 +255,5 @@ export class Processor {
         return result;
     }
 }
+
+new Processor(4096).decode_instruction(0xF000);
