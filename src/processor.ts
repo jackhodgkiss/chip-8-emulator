@@ -125,14 +125,18 @@ export class Processor {
                 break;
             }
             case Instructions.ASHEX: {
+                this._registers[`V${masked.second_nibble >> 8}`].value = masked.second_byte;
                 break;
             }
             case Instructions.ADD: {
+                this._registers[`V${masked.second_nibble >> 8}`].value += masked.second_byte;
                 break;
             }
             case 0x8000: {
                 switch(masked.first_last) {
                     case Instructions.COPY: {
+                        const VY: number = this._registers[`V${masked.third_nibble >> 4}`].value;
+                        this._registers[`V${masked.second_nibble >> 8}`].value = VY;
                         break;
                     }
                     case Instructions.OR: {

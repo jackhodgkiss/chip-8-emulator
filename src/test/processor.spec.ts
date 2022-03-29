@@ -154,9 +154,26 @@ describe("Instructions", () => {
         processor.decode_instruction(processor.fetch_instruction());
         expect(processor.registers[RegisterNames.PC].value).is.equal(0x204);
     });
-    it(`ASHEX: 0x${Instructions.ASHEX.toString(16)}, assign hex value to specified register`);
-    it(`ADD: 0x${Instructions.ADD.toString(16)}, add immediate value to the specified register`);
-    it(`COPY: 0x${Instructions.COPY.toString(16)}, copy the value from one register to another`);
+    it(`ASHEX: 0x${Instructions.ASHEX.toString(16)}, assign hex value to specified register`, () => {
+        let processor = new Processor(4096);
+        processor.decode_instruction(0x60AA);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0xAA);
+    });
+    it(`ADD: 0x${Instructions.ADD.toString(16)}, add immediate value to the specified register`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.V0].value = 0xA;
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0xA);
+        processor.decode_instruction(0x705A);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0x64);
+    });
+    it(`COPY: 0x${Instructions.COPY.toString(16)}, copy the value from one register to another`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.V0].value = 0xA;
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0xA);
+        expect(processor.registers[RegisterNames.V1].value).is.equal(0x0);
+        processor.decode_instruction(0x8100);
+        expect(processor.registers[RegisterNames.V1].value).is.equal(0xA);
+    });
     it(`OR: 0x${Instructions.OR.toString(16)}, perform a logical OR operator against two registers`);
     it(`AND: 0x${Instructions.AND.toString(16)}, perform a logical AND operator against two registers`);
     it(`XOR: 0x${Instructions.XOR.toString(16)}, perform a logical XOR operator against two registers`);
@@ -188,7 +205,7 @@ describe("Instructions", () => {
     it(`ADDMP: 0x${Instructions.GOTOV.toString(16)}, add VX to the memory pointer`);
     it(`DSPDIG: 0x${Instructions.DSPDIG.toString(16)}, set the memory pointer to the digit found in VX`);
     it(`DSPCHR: 0x${Instructions.DSPCHR.toString(16)}, set the memory pointer to the ASCII character found in VX`);
-    it(`DEQ: 0x${Instructions.GOTOV.toString(16)}, store a three digit decimal equivalent of VX in memory`);
+    it(`DEQ: 0x${Instructions.DEQ.toString(16)}, store a three digit decimal equivalent of VX in memory`);
     it(`STORE: 0x${Instructions.STORE.toString(16)}, store the contents of the registers from V0 to VX in memory`);
     it(`LOAD: 0x${Instructions.LOAD.toString(16)}, load into registers V0 to VX contents from memory`);
     it(`SEND: 0x${Instructions.SEND.toString(16)}, send the contents of VX to RS485 port`);
