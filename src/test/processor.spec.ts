@@ -174,11 +174,53 @@ describe("Instructions", () => {
         processor.decode_instruction(0x8100);
         expect(processor.registers[RegisterNames.V1].value).is.equal(0xA);
     });
-    it(`OR: 0x${Instructions.OR.toString(16)}, perform a logical OR operator against two registers`);
-    it(`AND: 0x${Instructions.AND.toString(16)}, perform a logical AND operator against two registers`);
-    it(`XOR: 0x${Instructions.XOR.toString(16)}, perform a logical XOR operator against two registers`);
-    it(`ADDF: 0x${Instructions.ADDF.toString(16)}, add two register together and detect if overflow occurs`);
-    it(`SUBY: 0x${Instructions.SUBY.toString(16)}, subtract two registers and detect if underflow occurs`);
+    it(`OR: 0x${Instructions.OR.toString(16)}, perform a logical OR operator against two registers`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.V0].value = 0xAB;
+        processor.registers[RegisterNames.V1].value = 0xC;
+        processor.decode_instruction(0x8011);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0xAF);
+    });
+    it(`AND: 0x${Instructions.AND.toString(16)}, perform a logical AND operator against two registers`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.V0].value = 0xAB;
+        processor.registers[RegisterNames.V1].value = 0xC;
+        processor.decode_instruction(0x8012);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0x8);
+    });
+    it(`XOR: 0x${Instructions.XOR.toString(16)}, perform a logical XOR operator against two registers`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.V0].value = 0xAB;
+        processor.registers[RegisterNames.V1].value = 0xC;
+        processor.decode_instruction(0x8013);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0xA7);
+    });
+    it(`ADDF: 0x${Instructions.ADDF.toString(16)}, add two register together and detect if overflow occurs`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.V0].value = 0xFF;
+        processor.registers[RegisterNames.V1].value = 0xFF;
+        processor.decode_instruction(0x8014);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0xFE);
+        expect(processor.registers[RegisterNames.VF].value).is.equal(0x1);
+        processor.registers[RegisterNames.V0].value = 0xFE;
+        processor.registers[RegisterNames.V1].value = 0x1;
+        processor.decode_instruction(0x8014);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0xFF);
+        expect(processor.registers[RegisterNames.VF].value).is.equal(0x0);
+    });
+    it(`SUBY: 0x${Instructions.SUBY.toString(16)}, subtract two registers and detect if underflow occurs`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.V0].value = 0xFF;
+        processor.registers[RegisterNames.V1].value = 0xFE;
+        processor.decode_instruction(0x8015);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0x1);
+        expect(processor.registers[RegisterNames.VF].value).is.equal(0x1);
+        processor.registers[RegisterNames.V0].value = 0x1;
+        processor.registers[RegisterNames.V1].value = 0xFF;
+        processor.decode_instruction(0x8015);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0x2);
+        expect(processor.registers[RegisterNames.VF].value).is.equal(0x0);
+    });
     it(`SHR: 0x${Instructions.SHR.toString(16)}, right shift value detect if LSB was one`);
     it(`SUBX: 0x${Instructions.SUBX.toString(16)}, subtract two registers and detect if underflow occurs`);
     it(`SHL: 0x${Instructions.SHL.toString(16)}, left shift value detect if MSB was one`);

@@ -140,18 +140,43 @@ export class Processor {
                         break;
                     }
                     case Instructions.OR: {
+                        const VX = this._registers[`V${masked.second_nibble >> 8}`].value;
+                        const VY = this._registers[`V${masked.third_nibble >> 4}`].value;
+                        this._registers[`V${masked.second_nibble >> 8}`].value = VX | VY;
                         break;
                     }
                     case Instructions.AND: {
+                        const VX = this._registers[`V${masked.second_nibble >> 8}`].value;
+                        const VY = this._registers[`V${masked.third_nibble >> 4}`].value;
+                        this._registers[`V${masked.second_nibble >> 8}`].value = VX & VY;
                         break;
                     }
                     case Instructions.XOR: {
+                        const VX = this._registers[`V${masked.second_nibble >> 8}`].value;
+                        const VY = this._registers[`V${masked.third_nibble >> 4}`].value;
+                        this._registers[`V${masked.second_nibble >> 8}`].value = VX ^ VY;
                         break;
                     }
                     case Instructions.ADDF: {
+                        const VX = this._registers[`V${masked.second_nibble >> 8}`].value;
+                        const VY = this._registers[`V${masked.third_nibble >> 4}`].value;
+                        this._registers[`V${masked.second_nibble >> 8}`].value += VY;
+                        if(VY > (0xFF - VX)) {
+                            this._registers[RegisterNames.VF].value = 1;
+                        } else {
+                            this._registers[RegisterNames.VF].value = 0;
+                        }
                         break;
                     }
                     case Instructions.SUBY: {
+                        const VX = this._registers[`V${masked.second_nibble >> 8}`].value;
+                        const VY = this._registers[`V${masked.third_nibble >> 4}`].value;
+                        this._registers[`V${masked.second_nibble >> 8}`].value -= VY;
+                        if(VY < VX) {
+                            this._registers[RegisterNames.VF].value = 1;
+                        } else {
+                            this._registers[RegisterNames.VF].value = 0;
+                        }
                         break;
                     }
                     case Instructions.SHR: {
