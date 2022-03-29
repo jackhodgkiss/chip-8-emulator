@@ -10,9 +10,9 @@ describe("Register", () => {
         const register = new Register(RegisterNames.V0, 0x0);
         expect(register.value).is.equal(0);
     });
-    it("Check if register only `stores` first 12 bits", () => {
+    it("Check if register only `stores` first 8 bits", () => {
         const register = new Register(RegisterNames.V0, 65535);
-        expect(register.value).is.equal(4095);
+        expect(register.value).is.equal(255);
     });
     it("Check if special register can store upto 16 bits", () => {
         const register = new Register(RegisterNames.SP, 65535);

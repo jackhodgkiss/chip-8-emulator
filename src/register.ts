@@ -21,7 +21,7 @@ export class Register {
     }
 
     public set value(value: number) {
-        this._value = value & (this._is_sixteen_bit ? 0xFFFF : 0xFFF);
+        this._value = value & (this._is_sixteen_bit ? 0xFFFF : 0xFF);
     }
 
     public get is_sixteen_bit(): boolean {
