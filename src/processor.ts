@@ -225,7 +225,7 @@ export class Processor {
             }
             case Instructions.SIP: {
                 const memory_location: number = masked.twelve_bits;
-                this._registers[RegisterNames.I].value = memory_location;
+                this._registers[RegisterNames.IP].value = memory_location;
                 break;
             }
             case Instructions.GOTOV: {
@@ -277,7 +277,7 @@ export class Processor {
                         break;
                     }
                     case Instructions.ADDIP: {
-                        this._registers[RegisterNames.I].value += this._registers[`V${masked.second_nibble >> 8}`].value;
+                        this._registers[RegisterNames.IP].value += this._registers[`V${masked.second_nibble >> 8}`].value;
                         break;
                     }
                     case Instructions.DSPDIG: {
@@ -288,26 +288,26 @@ export class Processor {
                     }
                     case Instructions.DEQ: {
                         let VX = this._registers[`V${masked.second_nibble >> 8}`].value;
-                        const I: number = this._registers['I'].value;
+                        const IP: number = this._registers[RegisterNames.IP].value;
                         for (let counter = 3; counter > 0; counter--) {
-                            this._system_memory[I + counter - 1] = VX % 10;
+                            this._system_memory[IP + counter - 1] = VX % 10;
                             VX /= 10;
                         }
                         break;
                     }
                     case Instructions.STORE: {
                         const X = masked.second_nibble >> 8;
-                        const I: number = this._registers[RegisterNames.I].value;
+                        const IP: number = this._registers[RegisterNames.IP].value;
                         for (let counter = 0; counter <= X; counter++) {
-                            this._system_memory[I + counter] = this._registers[`V${counter}`].value;
+                            this._system_memory[IP + counter] = this._registers[`V${counter}`].value;
                         }
                         break;
                     }
                     case Instructions.LOAD: {
                         const X = masked.second_nibble >> 8;
-                        const I: number = this._registers[RegisterNames.I].value;
+                        const IP: number = this._registers[RegisterNames.IP].value;
                         for (let counter = 0; counter <= X; counter++) {
-                            this._registers[`V${counter}`].value = this._system_memory[I + counter]; 
+                            this._registers[`V${counter}`].value = this._system_memory[IP + counter]; 
                         }
                         break;
                     }

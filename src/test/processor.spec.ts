@@ -267,7 +267,7 @@ describe("Instructions", () => {
     it(`SIP: 0x${Instructions.SIP.toString(16)}, set the index pointer to the immediate value`, () => {
         let processor = new Processor(4096);
         processor.decode_instruction(0xA010);
-        expect(processor.registers[RegisterNames.I].value).is.equal(0x10);
+        expect(processor.registers[RegisterNames.IP].value).is.equal(0x10);
     });
     it(`GOTOV: 0x${Instructions.GOTOV.toString(16)}, jump to the sum of the immediate address and V0`, () => {
         let processor = new Processor(4096);
@@ -293,16 +293,16 @@ describe("Instructions", () => {
     it(`STONE: 0x${Instructions.STONE.toString(16)}, set the sound tone timer for twenty times VX`);
     it(`ADDIP: 0x${Instructions.ADDIP.toString(16)}, add VX to the index pointer`, () => {
         let processor = new Processor(4096);
-        processor.registers[RegisterNames.I].value = 0x10;
+        processor.registers[RegisterNames.IP].value = 0x10;
         processor.registers[RegisterNames.V0].value = 0x10;
         processor.decode_instruction(0xF01E);
-        expect(processor.registers[RegisterNames.I].value).is.equal(0x20);
+        expect(processor.registers[RegisterNames.IP].value).is.equal(0x20);
     });
     it(`DSPDIG: 0x${Instructions.DSPDIG.toString(16)}, set the index pointer to the digit found in VX`);
     it(`DSPCHR: 0x${Instructions.DSPCHR.toString(16)}, set the index pointer to the ASCII character found in VX`);
     it(`DEQ: 0x${Instructions.DEQ.toString(16)}, store a three digit decimal equivalent of VX in memory`, () => {
         let processor = new Processor(4096);
-        processor.registers[RegisterNames.I].value = 0x100;
+        processor.registers[RegisterNames.IP].value = 0x100;
         processor.registers[RegisterNames.V0].value = 0x80;
         processor.decode_instruction(0xF033);
         expect(processor.system_memory[0x100]).is.equal(1);
@@ -312,7 +312,7 @@ describe("Instructions", () => {
     });
     it(`STORE: 0x${Instructions.STORE.toString(16)}, store the contents of the registers from V0 to VX in memory`, () => {
         let processor = new Processor(4096);
-        processor.registers[RegisterNames.I].value = 0x100;
+        processor.registers[RegisterNames.IP].value = 0x100;
         processor.registers[RegisterNames.V0].value = 0x80;
         processor.registers[RegisterNames.V1].value = 0x10;
         processor.registers[RegisterNames.V2].value = 0xAF;
@@ -323,7 +323,7 @@ describe("Instructions", () => {
     });
     it(`LOAD: 0x${Instructions.LOAD.toString(16)}, load into registers V0 to VX contents from memory`, () => {
         let processor = new Processor(4096);
-        processor.registers[RegisterNames.I].value = 0x100;
+        processor.registers[RegisterNames.IP].value = 0x100;
         processor.system_memory[0x100] = 0x10;
         processor.system_memory[0x101] = 0x20;
         processor.system_memory[0x102] = 0x30;

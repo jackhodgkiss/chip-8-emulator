@@ -7,7 +7,7 @@ export class Register {
         this._is_sixteen_bit = [
             RegisterNames.PC, 
             RegisterNames.SP, 
-            RegisterNames.I
+            RegisterNames.IP
         ].includes(name);
         this.value = value;
     }
@@ -54,5 +54,5 @@ export enum RegisterNames {
     DT = 'DT',
     PC = 'PC',
     SP = 'SP',
-    I = 'I'
+    IP = 'IP'
 }
