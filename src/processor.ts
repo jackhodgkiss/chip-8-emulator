@@ -190,9 +190,24 @@ export class Processor {
                         break;
                     }
                     case Instructions.SUBX: {
+                        const VX = this._registers[`V${masked.second_nibble >> 8}`].value;
+                        const VY = this._registers[`V${masked.third_nibble >> 4}`].value;
+                        this._registers[`V${masked.second_nibble >> 8}`].value = VY - VX;
+                        if(VY < VX) {
+                            this._registers[RegisterNames.VF].value = 0;
+                        } else {
+                            this._registers[RegisterNames.VF].value = 1;
+                        }
                         break;
                     }
                     case Instructions.SHL: {
+                        const VY = this._registers[`V${masked.third_nibble >> 4}`].value;
+                        this._registers[`V${masked.second_nibble >> 8}`].value = VY << 1;
+                        if((VY & 0x80) == 0x80) {
+                            this._registers[RegisterNames.VF].value = 1;
+                        } else {
+                            this._registers[RegisterNames.VF].value = 0;
+                        }
                         break;
                     }
                     default: {
@@ -209,12 +224,18 @@ export class Processor {
                 break;
             }
             case Instructions.SIP: {
+                const memory_location: number = masked.twelve_bits;
+                this._registers[RegisterNames.I].value = memory_location;
                 break;
             }
             case Instructions.GOTOV: {
+                const jump_location: number = masked.twelve_bits + this._registers[RegisterNames.V0].value;
+                this._registers[RegisterNames.PC].value = jump_location;
                 break;
             }
             case Instructions.RBAND: {
+                const generate_random_number = (): number => Math.floor(Math.random() * 0xFF + 0x1);
+                this._registers[`V${masked.second_nibble >> 8}`].value = masked.second_byte & generate_random_number();
                 break;
             }
             case Instructions.SHOW: {
@@ -255,7 +276,8 @@ export class Processor {
                     case Instructions.STONE: {
                         break;
                     }
-                    case Instructions.ADDMP: {
+                    case Instructions.ADDIP: {
+                        this._registers[RegisterNames.I].value += this._registers[`V${masked.second_nibble >> 8}`].value;
                         break;
                     }
                     case Instructions.DSPDIG: {
@@ -265,12 +287,28 @@ export class Processor {
                         break;
                     }
                     case Instructions.DEQ: {
+                        let VX = this._registers[`V${masked.second_nibble >> 8}`].value;
+                        const I: number = this._registers['I'].value;
+                        for (let counter = 3; counter > 0; counter--) {
+                            this._system_memory[I + counter - 1] = VX % 10;
+                            VX /= 10;
+                        }
                         break;
                     }
                     case Instructions.STORE: {
+                        const X = masked.second_nibble >> 8;
+                        const I: number = this._registers[RegisterNames.I].value;
+                        for (let counter = 0; counter <= X; counter++) {
+                            this._system_memory[I + counter] = this._registers[`V${counter}`].value;
+                        }
                         break;
                     }
                     case Instructions.LOAD: {
+                        const X = masked.second_nibble >> 8;
+                        const I: number = this._registers[RegisterNames.I].value;
+                        for (let counter = 0; counter <= X; counter++) {
+                            this._registers[`V${counter}`].value = this._system_memory[I + counter]; 
+                        }
                         break;
                     }
                     case Instructions.SEND: {

@@ -96,7 +96,7 @@ describe("Processor", () => {
         expect(processor.decode_instruction(Instructions.STIME).error).is.equal(undefined);
         expect(processor.decode_instruction(Instructions.SPITCH).error).is.equal(undefined);
         expect(processor.decode_instruction(Instructions.STONE).error).is.equal(undefined);
-        expect(processor.decode_instruction(Instructions.ADDMP).error).is.equal(undefined);
+        expect(processor.decode_instruction(Instructions.ADDIP).error).is.equal(undefined);
         expect(processor.decode_instruction(Instructions.DSPDIG).error).is.equal(undefined);
         expect(processor.decode_instruction(Instructions.DSPCHR).error).is.equal(undefined);
         expect(processor.decode_instruction(Instructions.DEQ).error).is.equal(undefined);
@@ -232,8 +232,30 @@ describe("Instructions", () => {
         expect(processor.registers[RegisterNames.V0].value).is.equal(0x8);
         expect(processor.registers[RegisterNames.VF].value).is.equal(0x1);
     });
-    it(`SUBX: 0x${Instructions.SUBX.toString(16)}, subtract two registers and detect if underflow occurs`);
-    it(`SHL: 0x${Instructions.SHL.toString(16)}, left shift value detect if MSB was one`);
+    it(`SUBX: 0x${Instructions.SUBX.toString(16)}, subtract two registers and detect if underflow occurs`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.V0].value = 0xFF;
+        processor.registers[RegisterNames.V1].value = 0xFE;
+        processor.decode_instruction(0x8017);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0xFF);
+        expect(processor.registers[RegisterNames.VF].value).is.equal(0x0);
+        processor.registers[RegisterNames.V0].value = 0x1;
+        processor.registers[RegisterNames.V1].value = 0xFF;
+        processor.decode_instruction(0x8017);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0xFE);
+        expect(processor.registers[RegisterNames.VF].value).is.equal(0x1);
+    });
+    it(`SHL: 0x${Instructions.SHL.toString(16)}, left shift value detect if MSB was one`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.V1].value = 0x010;
+        processor.decode_instruction(0x801E);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0x20);
+        expect(processor.registers[RegisterNames.VF].value).is.equal(0x0);
+        processor.registers[RegisterNames.V1].value = 0x80;
+        processor.decode_instruction(0x801E);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0x0);
+        expect(processor.registers[RegisterNames.VF].value).is.equal(0x1);
+    });
     it(`SKPNEQ: 0x${Instructions.SKPNEQ.toString(16)}, skip the next instruction if the specified register is not equal to the other register`, () => {
         let processor = new Processor(4096);
         processor.load_program([0x9010]);
@@ -242,9 +264,24 @@ describe("Instructions", () => {
         processor.decode_instruction(processor.fetch_instruction());
         expect(processor.registers[RegisterNames.PC].value).is.equal(0x204);
     });
-    it(`SIP: 0x${Instructions.SIP.toString(16)}, set the index pointer to the immediate value`);
-    it(`GOTOV: 0x${Instructions.GOTOV.toString(16)}, jump to the sum of the immediate address and V0`);
-    it(`RBAND: 0x${Instructions.RBAND.toString(16)}, generate a random byte and perform a logical AND against it and the immediate value`);
+    it(`SIP: 0x${Instructions.SIP.toString(16)}, set the index pointer to the immediate value`, () => {
+        let processor = new Processor(4096);
+        processor.decode_instruction(0xA010);
+        expect(processor.registers[RegisterNames.I].value).is.equal(0x10);
+    });
+    it(`GOTOV: 0x${Instructions.GOTOV.toString(16)}, jump to the sum of the immediate address and V0`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.V0].value = 0x10;
+        processor.decode_instruction(0xB010);
+        expect(processor.registers[RegisterNames.PC].value).is.equal(0x20);
+    });
+    it(`RBAND: 0x${Instructions.RBAND.toString(16)}, generate a random byte and perform a logical AND against it and the immediate value`, () => {
+        let processor = new Processor(4096);
+        for (let counter = 0; counter < 1_000; counter++) {
+            processor.decode_instruction(0xC0AF);
+            expect(processor.registers[RegisterNames.V0].value).is.below(0x100);
+        }
+    });
     it(`SHOW: 0x${Instructions.SHOW.toString(16)}, update display memory with byte pattern at specified coordinates`);
     it(`SKPKEQ: 0x${Instructions.SKPKEQ.toString(16)}, skip next instruction if the key being pressed is equal to VX`);
     it(`SKPKNEQ: 0x${Instructions.SKPKNEQ.toString(16)}, skip next instruction if the key being pressed is not equal to VX`);
@@ -254,12 +291,47 @@ describe("Instructions", () => {
     it(`STIME: 0x${Instructions.STIME.toString(16)}, initialise the time with the value in VX`);
     it(`SPITCH: 0x${Instructions.SPITCH.toString(16)}, set the pitch of the tone generator to VX`);
     it(`STONE: 0x${Instructions.STONE.toString(16)}, set the sound tone timer for twenty times VX`);
-    it(`ADDMP: 0x${Instructions.GOTOV.toString(16)}, add VX to the memory pointer`);
-    it(`DSPDIG: 0x${Instructions.DSPDIG.toString(16)}, set the memory pointer to the digit found in VX`);
-    it(`DSPCHR: 0x${Instructions.DSPCHR.toString(16)}, set the memory pointer to the ASCII character found in VX`);
-    it(`DEQ: 0x${Instructions.DEQ.toString(16)}, store a three digit decimal equivalent of VX in memory`);
-    it(`STORE: 0x${Instructions.STORE.toString(16)}, store the contents of the registers from V0 to VX in memory`);
-    it(`LOAD: 0x${Instructions.LOAD.toString(16)}, load into registers V0 to VX contents from memory`);
+    it(`ADDIP: 0x${Instructions.ADDIP.toString(16)}, add VX to the index pointer`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.I].value = 0x10;
+        processor.registers[RegisterNames.V0].value = 0x10;
+        processor.decode_instruction(0xF01E);
+        expect(processor.registers[RegisterNames.I].value).is.equal(0x20);
+    });
+    it(`DSPDIG: 0x${Instructions.DSPDIG.toString(16)}, set the index pointer to the digit found in VX`);
+    it(`DSPCHR: 0x${Instructions.DSPCHR.toString(16)}, set the index pointer to the ASCII character found in VX`);
+    it(`DEQ: 0x${Instructions.DEQ.toString(16)}, store a three digit decimal equivalent of VX in memory`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.I].value = 0x100;
+        processor.registers[RegisterNames.V0].value = 0x80;
+        processor.decode_instruction(0xF033);
+        expect(processor.system_memory[0x100]).is.equal(1);
+        expect(processor.system_memory[0x101]).is.equal(2);
+        expect(processor.system_memory[0x102]).is.equal(8);
+
+    });
+    it(`STORE: 0x${Instructions.STORE.toString(16)}, store the contents of the registers from V0 to VX in memory`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.I].value = 0x100;
+        processor.registers[RegisterNames.V0].value = 0x80;
+        processor.registers[RegisterNames.V1].value = 0x10;
+        processor.registers[RegisterNames.V2].value = 0xAF;
+        processor.decode_instruction(0xF255);
+        expect(processor.system_memory[0x100]).is.equal(0x80);
+        expect(processor.system_memory[0x101]).is.equal(0x10);
+        expect(processor.system_memory[0x102]).is.equal(0xAF);
+    });
+    it(`LOAD: 0x${Instructions.LOAD.toString(16)}, load into registers V0 to VX contents from memory`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.I].value = 0x100;
+        processor.system_memory[0x100] = 0x10;
+        processor.system_memory[0x101] = 0x20;
+        processor.system_memory[0x102] = 0x30;
+        processor.decode_instruction(0xF265);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0x10);
+        expect(processor.registers[RegisterNames.V1].value).is.equal(0x20);
+        expect(processor.registers[RegisterNames.V2].value).is.equal(0x30);
+    });
     it(`SEND: 0x${Instructions.SEND.toString(16)}, send the contents of VX to RS485 port`);
     it(`RECV: 0x${Instructions.RECV.toString(16)}, wait to receive data from RS485 and store in VX`);
     it(`SBAUD: 0x${Instructions.STORE.toString(16)}, set the Baud rate for the RS485`);

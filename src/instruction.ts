@@ -31,7 +31,7 @@ export enum Instructions {
     STIME = 0xF015,
     SPITCH = 0xF017,
     STONE = 0xF018,
-    ADDMP = 0xF01E,
+    ADDIP = 0xF01E,
     DSPDIG = 0xF029,
     DSPCHR = 0xF02A,
     DEQ = 0xF033,
