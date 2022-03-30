@@ -180,6 +180,13 @@ export class Processor {
                         break;
                     }
                     case Instructions.SHR: {
+                        const VY = this._registers[`V${masked.third_nibble >> 4}`].value;
+                        this._registers[`V${masked.second_nibble >> 8}`].value = VY >> 1;
+                        if((VY & 0x1) == 0x1) {
+                            this._registers[RegisterNames.VF].value = 1;
+                        } else {
+                            this._registers[RegisterNames.VF].value = 0;
+                        }
                         break;
                     }
                     case Instructions.SUBX: {

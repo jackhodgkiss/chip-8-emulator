@@ -221,7 +221,17 @@ describe("Instructions", () => {
         expect(processor.registers[RegisterNames.V0].value).is.equal(0x2);
         expect(processor.registers[RegisterNames.VF].value).is.equal(0x0);
     });
-    it(`SHR: 0x${Instructions.SHR.toString(16)}, right shift value detect if LSB was one`);
+    it(`SHR: 0x${Instructions.SHR.toString(16)}, right shift value detect if LSB was one`, () => {
+        let processor = new Processor(4096);
+        processor.registers[RegisterNames.V1].value = 0x010;
+        processor.decode_instruction(0x8016);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0x8);
+        expect(processor.registers[RegisterNames.VF].value).is.equal(0x0);
+        processor.registers[RegisterNames.V1].value = 0x011;
+        processor.decode_instruction(0x8016);
+        expect(processor.registers[RegisterNames.V0].value).is.equal(0x8);
+        expect(processor.registers[RegisterNames.VF].value).is.equal(0x1);
+    });
     it(`SUBX: 0x${Instructions.SUBX.toString(16)}, subtract two registers and detect if underflow occurs`);
     it(`SHL: 0x${Instructions.SHL.toString(16)}, left shift value detect if MSB was one`);
     it(`SKPNEQ: 0x${Instructions.SKPNEQ.toString(16)}, skip the next instruction if the specified register is not equal to the other register`, () => {
