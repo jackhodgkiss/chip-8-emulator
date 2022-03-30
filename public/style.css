@@ -22,15 +22,15 @@ body {
 }
 
 #emulator-screen {
-    width: 795px;
-    height: 399px;
+    width: 835px;
+    height: 419px;
     background-color: black;
     border: 1px solid white;
     margin-left: auto;
     margin-right: auto;
     display: grid;
-    grid-template-columns: repeat(24, 32px);
-    grid-template-rows: repeat(12, 32px);
+    grid-template-columns: repeat(64, 12px);
+    grid-template-rows: repeat(32, 12px);
     gap: 1px;
     padding: 1px;
     border-radius: 4px;
