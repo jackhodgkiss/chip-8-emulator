@@ -39,9 +39,6 @@ body {
 
 .pixel {
     border-radius: 2px;
-}
-
-.pixel.low {
     background-color: black;
 }
 
