@@ -18,7 +18,7 @@ export class Processor {
     constructor(memory_size: number) {
         this._system_memory = create_memory(memory_size);
         this.initialise_register();
-        if(typeof window == "undefined") {
+        if(typeof window != "undefined") {
             this._display = new Display();
         }
     }
