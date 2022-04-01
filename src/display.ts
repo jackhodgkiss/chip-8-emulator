@@ -8,9 +8,9 @@ export class Display {
     
     private initialise_display(): void {
         const emulator_screen: HTMLDivElement = document.getElementById("emulator-screen") as HTMLDivElement;
-        for(let column = 0; column < this._columns; column++) {
+        for(let row = 0; row < this._rows; row++) {
             const pixel_column: Array<HTMLDivElement> = [];
-            for(let row = 0; row < this._rows; row++) {
+            for(let column = 0; column < this._columns; column++) {
                 const pixel: HTMLDivElement = document.createElement("div");
                 pixel.classList.add("pixel");
                 if(Math.random() <= 0.5) { pixel.classList.add("high"); }
