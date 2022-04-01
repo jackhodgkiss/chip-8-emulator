@@ -21,6 +21,16 @@ export class Display {
         }
     }
 
+    public toggle_pixel(abscissa: number, ordinate: number): boolean {
+        const is_high = this._pixels[ordinate][abscissa].classList.contains("high");
+        if(is_high) {
+            this._pixels[ordinate][abscissa].classList.remove("high");
+        } else {
+            this._pixels[ordinate][abscissa].classList.add("high");
+        }
+        return is_high;
+    }
+
     public clear(): void {
         for (const column of this._pixels) {
             column.forEach(pixel => {

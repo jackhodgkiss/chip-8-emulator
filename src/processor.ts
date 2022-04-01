@@ -243,6 +243,22 @@ export class Processor {
                 break;
             }
             case Instructions.SHOW: {
+                const VX = this._registers[`V${masked.second_nibble >> 8}`].value & 63;
+                const VY = this._registers[`V${masked.third_nibble >> 4}`].value & 31;
+                const IP = this._registers[RegisterNames.IP].value;
+                const N = masked.fourth_nibble;
+                this._registers[RegisterNames.VF].value = 0;
+                for(let column = 0; column < N; column++) {
+                    const sprite_row: number = this._system_memory[IP + column];
+                    for(let row = 0; row < 8; row++) {
+                        if(VX + row > 63 || VY + column > 31) { continue; }
+                        if((sprite_row & (0x80 >> row )) != 0) {
+                            if(this._display.toggle_pixel(VX + row, VY + column)) {
+                                this._registers[RegisterNames.VF].value = 1;
+                            }
+                        }
+                    }
+                }
                 break;
             }
             case 0xE000: {
