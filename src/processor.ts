@@ -352,5 +352,3 @@ export class Processor {
         return result;
     }
 }
-
-new Processor(4096).decode_instruction(0xF000);
