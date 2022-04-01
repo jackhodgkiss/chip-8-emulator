@@ -21,8 +21,15 @@ export class Display {
         }
     }
 
+    public clear(): void {
+        for (const column of this._pixels) {
+            column.forEach(pixel => {
+                pixel.classList.remove("high");
+            });
+        }
+    }
+
     public get pixels(): Array<Array<HTMLDivElement>> {
         return this._pixels;
     }
-
 }
