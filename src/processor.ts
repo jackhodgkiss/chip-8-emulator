@@ -38,6 +38,11 @@ export class Processor {
         });
     }
 
+    public step(): void {
+        const instruction: number = this.fetch_instruction();
+        this.decode_instruction(instruction);
+    }
+
     public fetch_instruction(): number {
         let program_counter: number = this._registers[RegisterNames.PC].value;
         const high_bits: number = this._system_memory[program_counter++];
