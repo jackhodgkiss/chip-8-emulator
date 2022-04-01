@@ -3,7 +3,9 @@ export class Display {
     private _columns: number = 64;
     private _pixels: Array<Array<HTMLDivElement>> = [];
     constructor() {
-        this.initialise_display();
+        if(typeof window != "undefined") {
+            this.initialise_display();
+        }
     }
     
     private initialise_display(): void {

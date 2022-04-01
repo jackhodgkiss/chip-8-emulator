@@ -14,11 +14,13 @@ export type mask = {
 export class Processor {
     private _system_memory: Uint8Array;
     private _registers!: { [name: string]: Register };
-    private _display: Display;
+    private _display!: Display;
     constructor(memory_size: number) {
         this._system_memory = create_memory(memory_size);
         this.initialise_register();
-        this._display = new Display();
+        if(typeof window == "undefined") {
+            this._display = new Display();
+        }
     }
 
     private initialise_register(): void {
@@ -76,7 +78,9 @@ export class Processor {
                         break;
                     }
                     case Instructions.CLS: {
-                        this._display.clear();
+                        if(typeof window != "undefined") {
+                            this._display.clear();
+                        }
                         break;
                     }
                     case Instructions.RET: {
