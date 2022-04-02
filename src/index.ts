@@ -19,7 +19,7 @@ class Emulator {
         const registers = Object.keys(this._processor.registers);
         this._state.innerText = "";
         registers.forEach(register_name => {
-            this._state.innerText += `${this._processor.registers[register_name].name}: ${this._processor.registers[register_name].value}\n`;
+            this._state.innerText += ` ${this._processor.registers[register_name].name}: ${this._processor.registers[register_name].value} `;
         });
     }
 
@@ -27,7 +27,6 @@ class Emulator {
         this._processor.step();
         this.display_state();
     }
-
 }
 
 document.addEventListener("DOMContentLoaded", () => {
