@@ -1,8 +1,10 @@
 import { Processor } from "processor";
+import { RegisterNames } from "register";
 
 class Emulator {
     private _processor: Processor;
     private _state: HTMLDivElement;
+    private _instructions: HTMLDivElement;
     constructor() {
         this._processor = new Processor(4096);
         this._processor.load_program([
@@ -12,7 +14,9 @@ class Emulator {
             0xA082, 0x610F, 0xD105
         ]);
         this._state = document.getElementById("state") as HTMLDivElement;
+        this._instructions = document.getElementById("instruction") as HTMLDivElement;
         this.display_state();
+        this.display_instructions();
     }
 
     private display_state() {
@@ -23,9 +27,19 @@ class Emulator {
         });
     }
 
+    private display_instructions() {
+        const system_memory = this._processor.system_memory;
+        const PC = this._processor.registers[RegisterNames.PC].value;
+        this._instructions.innerText = "";
+        for(let index = 0x200; index < 0x20C; index++) {
+            this._instructions.innerHTML += `0x${system_memory[index].toString(16)}<br>`;
+        }
+    }
+
     public step() {
         this._processor.step();
         this.display_state();
+        this.display_instructions();
     }
 }
 
