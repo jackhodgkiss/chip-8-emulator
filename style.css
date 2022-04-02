@@ -47,15 +47,23 @@ body {
     background-color: white;
 }
 
-#overview {
-    text-align: center;
-    width: 40%;
-    float: right;
-    color: white;
+#registers {
     font-family: 'Courier New', Courier, monospace;
-    align-content: center;
+    font-weight: 100;
+    color: white;
+    width: 835px;
+    float: left;
+    margin: 10px 5px 5px 5px;
 }
 
-#overview h3 {
+#registers h3 {
+    text-align: center;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 100;
     margin: 0;
+}
+
+#instructions {
+    color: white;
 }
